@@ -1,20 +1,20 @@
 # LLM fine-tuning experiments
-Our code is primarily based on [ZO-Muon](https://github.com/OPTML-Group/ZO-Muon), [LOZO](https://github.com/optsuite/LOZO.git), [HiZOO](https://github.com/Yanjun-Zhao/HiZOO) and [MeZO](https://github.com/princeton-nlp/MeZO.git).
+Our code is primarily based on [ZO-Muon](https://github.com/OPTML-Group/ZO-Muon).
 
 ## Installation
 ```
-conda create -n zo python==3.9.19
-conda activate zo
+conda create -n muon python==3.9.19
+conda activate muon
 pip install -r requirements.txt
 ```
-This environment supports fine-tuning the OPT, Llama3 and Gemma2 models.
+This environment supports fine-tuning the OPT and Qwen models.
 
 ## Usage
 
 ### Our proposed methods
-Below is an example command for evaluating our proposed **ZO-MOPI** on OPT-13B RTE fine-tuning.
+Below is an example command for evaluating our proposed **DAZM** on OPT-13B RTE fine-tuning.
 ```
-CUDA_VISIBLE_DEVICES=0 MODEL=facebook/opt-13b TASK=RTE MODE=ft LR=1e-2 BS=16 EPS=1e-3 RANK=64 STEP_INTERVAL=500  MULTIPLE_SAMPLE=True NUM_SAMPLES=8 STEPS=4000 EVAL_STEPS=1000 bash scripts/zo_mopi.sh
+CUDA_VISIBLE_DEVICES=0 MODEL=facebook/opt-13b TASK=RTE MODE=ft LR=1e-2 BS=16 EPS=1e-3 RANK=64 STEP_INTERVAL=500  MULTIPLE_SAMPLE=True NUM_SAMPLES=8 STEPS=4000 EVAL_STEPS=1000 bash scripts/greedy_muon.sh
 ```
 
 
@@ -35,14 +35,6 @@ For the ZO-Muon variant where gradient orthogonalization is solved by SVD, we se
 ```
 CUDA_VISIBLE_DEVICES=0 MODEL=facebook/opt-13b TASK=RTE MODE=ft LR=1e-2 BS=16 EPS=1e-3 RANK=64 STEP_INTERVAL=100 OPT='muon_svd' MULTIPLE_SAMPLE=True NUM_SAMPLES=4 STEPS=8000 EVAL_STEPS=8000 bash scripts/lowdim.sh
 ```
-
-
-### Compare with same Runtime
-We can compare difference ZO methods with the same training runtime by setting `$MAX_TIME`, measured in seconds. See an example below:
-```
-CUDA_VISIBLE_DEVICES=0 MODEL=facebook/opt-13b TASK=RTE MODE=ft LR=1e-2 BS=16 EPS=1e-3 RANK=64 STEP_INTERVAL=100 OPT='muon' MULTIPLE_SAMPLE=True NUM_SAMPLES=4 STEPS=8000 EVAL_STEPS=8000 MAX_TIME=5000 bash scripts/lowdim.sh
-```
-
 
 ### First-Order Methods
 Full Adam fine-tuning:
