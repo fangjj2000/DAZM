@@ -24,12 +24,10 @@ from metrics import calculate_metric
 from gradient_spectrum import GradientSpectrumRecorder
 from utils import *
 from utils_compat import maybe_log_to_wandb, prefix_metric_keys
-from HiZOOtrainer import HiZOOTrainer
 from MeZOTrainer import MeZOTrainer
 from LowDimTrainer import LowDimTrainer
 from LOZOTrainer import LOZOTrainer
 from SubZeroTrainer import SubZeroTrainer
-from ZOMuonTrainer import ZOMuonTrainer
 from GreedyZounDimTrainer import GreedyZuonTrainer
 from GELOZOtrainer import GELowRankTrainer
 from transformers import (
@@ -845,16 +843,7 @@ class Framework:
         else:
             collator = DataCollatorForTokenClassification
         data_collator = DataCollatorWithPaddingAndNesting(self.tokenizer, pad_to_multiple_of=8) if self.args.train_as_classification else collator(self.tokenizer, pad_to_multiple_of=8)
-        if self.args.trainer=="hizoo":
-            trainer = HiZOOTrainer(
-                    model=self.model, 
-                    args=self.args,
-                    train_dataset=train_dataset, 
-                    eval_dataset=eval_dataset,
-                    data_collator=data_collator,
-                )
-            trainer.tokenizer = self.tokenizer
-        elif self.args.trainer=="mezo":
+        if self.args.trainer=="mezo":
             trainer = MeZOTrainer(
                 model=self.model, 
                 args=self.args,
@@ -883,15 +872,6 @@ class Framework:
             trainer.tokenizer = self.tokenizer
         elif self.args.trainer=="subzero":
             trainer = SubZeroTrainer(
-                model=self.model, 
-                args=self.args,
-                train_dataset=train_dataset, 
-                eval_dataset=eval_dataset,
-                data_collator=data_collator,
-            )
-            trainer.tokenizer = self.tokenizer
-        elif self.args.trainer=="zomuon":
-            trainer = ZOMuonTrainer(
                 model=self.model, 
                 args=self.args,
                 train_dataset=train_dataset, 
